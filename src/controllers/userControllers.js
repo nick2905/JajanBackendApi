@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 import { UserSchema } from "../models/userModel";
-import crypto from 'crypto';
+import { crypto, subtle } from 'crypto';
 
 const User = mongoose.model('User', UserSchema);
-
 export const loginRequired = (req, res, next) => {
     if (req.user) {
         next()
@@ -51,7 +50,7 @@ export const login = (req, res) => {
     }, (err, user) => {
         if (err) throw err;
         if (!user) {
-            res.status(401).json({ message: 'Authentication failed. No user found!' });
+            return res.status(401).json({ message: 'Authentication failed. No user found!' });
         } else if (user) {
             var passwordField = user.hashPassword.split('$');
             var salt = passwordField[0];
@@ -59,7 +58,7 @@ export const login = (req, res) => {
                 .update(req.body.hashPassword)
                 .digest("hex");
             if (!(hash === passwordField[1])) {
-                res.status(401).json({ message: 'Authentication failed. Wrong password!' });
+                return res.status(401).json({ message: 'Authentication failed. Wrong password!' });
             } else {
                 //Nanti ganti jadi JWT sebelum produksi
                 return res.status(200).json({ message: 'Successfull Login.' });

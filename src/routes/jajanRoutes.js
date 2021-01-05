@@ -1,4 +1,4 @@
-import { loginRequired, register, login } from '../controllers/userControllers';
+import { loginRequired, register, login, addCreditCard } from '../controllers/userControllers';
 import { getAllCart, addToCart, removeFromCart } from '../controllers/keranjangControllers';
 
 const routes = (app) => {
@@ -14,6 +14,9 @@ const routes = (app) => {
         .delete(removeFromCart)
 
         .get(getAllCart)
+    
+    
+
 }
 
 export default routes;

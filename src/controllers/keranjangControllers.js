@@ -11,41 +11,72 @@ export const getAllCart = (req, res) => {
         });
 }
 
+//Belum di Test
 export const addToCart = (req, res) => {
-    const newKeranjang = new Keranjang(req.body);
+    try {
+        const newKeranjang = new Keranjang(req.body);
 
-    Keranjang.findOne({ idUser: req.body.idUser }, (err, keranjang) => {
-        if (err) throw err;
-        if (!keranjang) {
-            newKeranjang.save((err) => {
-                if (err) throw err;
-                res.status(200).json(keranjang, { message: 'Successfull Add To Keranjang' });
-            });
-        } else if (keranjang) {
-            Keranjang.updateOne({ idUser: req.params.idUser }, {
-                $push: { listProduct: { idProduct: req.body.idProduct, qtyProduct: req.body.qtyProduct } }
-            }, (err, data) => {
-                if (err) {
-                    res.send(err);
+        const findKeranjangUser = Keranjang.find({
+            idUser: req.body.idUser
+        }, (err, keranjang) => {
+            if (err) throw err;
+            if (!keranjang) {
+                newKeranjang.save((err) => {
+                    if (err) throw err;
+                    return res.status(200).json(keranjang, { message: 'Successfull Add To Keranjang' });
+                })
+            } else if (keranjang) {
+                return res.status(200).json({ message: 'Produk Sudah Ada Di Keranjang' });
+            }
+        });
+    } catch (error) {
+        return res.status(401).json(error);
+    }
+}
+
+//Belum di test
+export const addReduceQtyProduct = (req, res) => {
+    try {
+        if (req.body.status === "add") {
+            const data = Keranjang.findOneAndUpdate({
+                idUser: req.body.idUser,
+                "listProduct.idProduct": req.body.idProduct
+            }, {
+                $inc: {
+                    "listProduct.$.qtyProduct": +1
                 }
-                console.log("Keranjang -> "+ data);
-                console.log("ID Product ->" + req.body.idProduct);
-                console.log("Qty Product ->" + req.body.qtyProduct);
-                res.status(200).json({ message: 'Successfull Add To Keranjang' });
             });
+            return res.status(200).json(data);
+        } else if (req.body.status === "reduce") {
+            const data = Keranjang.findOneAndUpdate({
+                idUser: req.body.idUser,
+                "listProduct.idProduct": req.body.idProduct
+            }, {
+                $inc: {
+                    "listProduct.$.qtyProduct": -1
+                }
+            });
+            return res.status(200).json(data);
         }
-    });
+    } catch (error) {
+        return res.status(401).json(error);
+    }
 }
 
 export const removeFromCart = (req, res) => {
-    Keranjang.updateOne({ idUser: req.params.idUser }, {
-        $pull: { idProduct: req.body.idProduct }
-    }, (err) => {
-        if (err) {
-            res.send(err);
-        }
-        res.status(200).json({ message: 'Successfull Remove From Keranjang' });
-    });
+    try {
+        const findKeranjangUser = Keranjang.findOneAndUpdate({
+            idUser: req.body.idUser
+        }, {
+            $pull: {
+                "listProduct.$.idProduct": req.body.idProduct
+            }
+        });
+        console.log("Find Keranjang ->" + findKeranjangUser);
+        return res.status(200).json(findKeranjangUser);
+    } catch (error) {
+        return res.status(401).json(error)
+    }
 }
 
 export const editQtyFromCart = (req, res) => {
