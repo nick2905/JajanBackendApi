@@ -8,6 +8,9 @@ const Keranjang = mongoose.model('Keranjang', KeranjangSchema);
 export const createPayment = (req, res) => {
     try {
         const newPayment = new Payment(req.body);
+
+        //Tambahi disini hapus array id yang dikirim
+        
         newPayment.save();
         return res.status(200).json({ message: 'Berhasil' });
     } catch (error) {

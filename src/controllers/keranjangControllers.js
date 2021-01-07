@@ -1,7 +1,7 @@
 import { Keranjang } from "../models/keranjangModel";
 
 export const getAllCart = (req, res, next) => {
-  Keranjang.findOne({ idUser: "5fe48499f1445285b4a75db5" })
+  Keranjang.findOne({ idUser: req.body.idUser })
     .then((cart) => res.status(200).json(cart))
     .catch((err) => console.log(err));
 };
@@ -11,7 +11,7 @@ export const getAllCart = (req, res, next) => {
 
 export const addToCart = (req, res) => {
   const product = req.body;
-  Keranjang.findOne({ idUser: "5fe48499f1445285b4a75db5" })
+  Keranjang.findOne({ idUser: req.body.idUser })
     .then((cart) => {
       const cartProductIndex = cart.listProduct.findIndex((cartProduct) => {
         return cartProduct.idProduct.toString() === product._id.toString();
@@ -39,7 +39,8 @@ export const addToCart = (req, res) => {
 
 export const removeFromCart = (req, res) => {
   const idProduct = req.body._id;
-  Keranjang.findOne({ idUser: "5fe48499f1445285b4a75db5" })
+
+  Keranjang.findOne({ idUser: req.body.idUser })
     .then((cart) => {
       const updatedCartItems = cart.listProduct.filter(
         (item) => item.idProduct.toString() !== idProduct.toString()
