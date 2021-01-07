@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { UserSchema } from "../models/userModel";
-import { crypto, subtle } from 'crypto';
+import { crypto } from 'crypto';
+import jwt from 'jsonwebtoken';
 
 const User = mongoose.model('User', UserSchema);
 export const loginRequired = (req, res, next) => {
@@ -54,14 +55,14 @@ export const login = (req, res) => {
         } else if (user) {
             var passwordField = user.hashPassword.split('$');
             var salt = passwordField[0];
-            var hash = crypto.createHmac('sha256', salt)
+            var hash = crypto.createHmac("sha256", salt)
                 .update(req.body.hashPassword)
-                .digest("hex");
+                .digest('hex');
             if (!(hash === passwordField[1])) {
                 return res.status(401).json({ message: 'Authentication failed. Wrong password!' });
             } else {
-                //Nanti ganti jadi JWT sebelum produksi
-                return res.status(200).json({ message: 'Successfull Login.' });
+                //jwt
+                return res.status(200).json({ token: jwt.sign({ email: user.email, _id: user.id }, 'RESTFULLAPI') });
             }
         }
     })

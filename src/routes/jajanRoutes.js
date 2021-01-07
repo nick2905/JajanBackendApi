@@ -1,8 +1,7 @@
 import {
     loginRequired,
     register,
-    login,
-    addCreditCard
+    login
 } from '../controllers/userControllers';
 import {
     getAllCart,
@@ -14,6 +13,11 @@ import {
     getAllPayment,
     getOnePayment
 } from '../controllers/paymentControllers';
+import {
+    postOneProduct,
+    getAllProduct
+} from '../controllers/adminControllers';
+
 
 const routes = (app) => {
     app.route('/auth/register')
@@ -23,18 +27,20 @@ const routes = (app) => {
         .post(login);
 
     app.route('/keranjang')
-        .post(addToCart)
+        .post(loginRequired, addToCart)
+        .delete(loginRequired, removeFromCart)
+        .get(loginRequired, getAllCart)
 
-        .delete(removeFromCart)
-
-        .get(getAllCart)
+    app.route('/admin/product')
+        .post(loginRequired, postOneProduct)
+        .get(loginRequired, getAllProduct)
 
     app.route('/payment/:idUser')
-        .post(createPayment)
-        .get(getAllPayment)
+        .post(loginRequired, createPayment)
+        .get(loginRequired, getAllPayment)
 
     app.route('/payment/detail/:idPayment')
-        .get(getOnePayment)
+        .get(loginRequired, getOnePayment)
 
 }
 
