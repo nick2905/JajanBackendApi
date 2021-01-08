@@ -1,32 +1,37 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-export const PaymentSchema = new Schema({
-    idUser: {
+const PaymentSchema = new Schema({
+  idUser: {
+    type: String,
+    required: true,
+  },
+  listProduct: [
+    {
+      idProduct: {
         type: String,
-        required: true
+        required: true,
+      },
+      qtyProduct: {
+        type: Number,
+        required: true,
+      },
     },
-    listProduct: [{
-        idProduct: {
-            type: String,
-            required: true,
-        },
-        qtyProduct: {
-            type: Number,
-            required: true
-        }
-    }],
-    creditCardCode:{
-        type: String,
-        required: true
-    },
-    ccvNumberHash: {
-        type: String,
-        required: true
-    },
-    isFinished: {
-        type: Boolean,
-        default: false
-    }
+  ],
+  creditCardCode: {
+    type: String,
+    required: true,
+  },
+  ccvNumberHash: {
+    type: String,
+    required: true,
+  },
+  isFinished: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+export const Payment = mongoose.model("Payment", PaymentSchema);
+
