@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { UserSchema } from "../models/userModel";
-import { crypto } from 'crypto';
+const crypto = require('crypto');
 import jwt from 'jsonwebtoken';
 
 const User = mongoose.model('User', UserSchema);
@@ -55,7 +55,8 @@ export const login = (req, res) => {
         } else if (user) {
             var passwordField = user.hashPassword.split('$');
             var salt = passwordField[0];
-            var hash = crypto.createHmac("sha256", salt)
+            var hash = crypto
+                .createHmac('sha256', salt)
                 .update(req.body.hashPassword)
                 .digest('hex');
             if (!(hash === passwordField[1])) {
