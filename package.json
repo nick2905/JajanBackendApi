@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./index.js --exec babel-node -e js"
+    "start": "node ./index.js --exec babel-node -e js"
   },
   "author": "Nicolas Manurung",
   "license": "ISC",
@@ -22,7 +22,8 @@
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.8",
     "nodemon": "^2.0.6",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "cors": "latest"
   },
   "devDependencies": {}
 }
