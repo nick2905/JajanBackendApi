@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js --exec babel-node -e js"
+    "start": "nodemon ./index.js --exec babel-node -e js",
+    "dev": "nodemon ./index.js --exec babel-node -e js"
   },
   "author": "Nicolas Manurung",
   "license": "ISC",
