@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -35,7 +35,10 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  role: {
+    type: String,
+    default: 'common_user',
+  },
 });
 
-export const User = mongoose.model("User", UserSchema);
-
+export const User = mongoose.model('User', UserSchema);
