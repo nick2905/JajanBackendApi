@@ -1,9 +1,22 @@
-import { Keranjang } from "../models/keranjangModel";
+import { Keranjang } from '../models/keranjangModel';
 
-export const getAllCart = (req, res, next) => {
-  Keranjang.findOne({ idUser: req.user._id })
-    .then((cart) => res.status(200).json(cart.listProduct))
-    .catch((err) => console.log(err));
+export const getAllCart = async (req, res, next) => {
+  try {
+    const response = await Keranjang.findOne({ idUser: req.user._id });
+    if (!response) {
+      throw new Error('No keranjang found');
+    }
+    res.status(200).send(response.listProduct);
+  } catch (err) {
+    res
+      .send({
+        message: err.message,
+      })
+      .status(400);
+  }
+  // Keranjang.findOne({ idUser: req.user._id })
+  //   .then((cart) => res.status(200).json(cart.listProduct))
+  //   .catch((err) => console.log(err));
 };
 
 export const addToCart = (req, res) => {
@@ -28,7 +41,7 @@ export const addToCart = (req, res) => {
       }
 
       cart.listProduct = updatedCartItems;
-      res.status(200).json("Ok");
+      res.status(200).json('Ok');
       return cart.save();
     })
     .catch((err) => console.log(err));
@@ -44,9 +57,8 @@ export const removeFromCart = (req, res) => {
       );
 
       cart.listProduct = updatedCartItems;
-      res.status(200).json("Ok");
+      res.status(200).json('Ok');
       return cart.save();
     })
     .catch((err) => console.log(err));
 };
-
