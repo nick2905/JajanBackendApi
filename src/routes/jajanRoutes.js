@@ -1,4 +1,4 @@
-import { loginRequired, register, login } from "../controllers/userControllers";
+import { loginRequired, register, login, verification } from "../controllers/userControllers";
 import { getAllCart, addToCart, removeFromCart } from "../controllers/keranjangControllers";
 import { createPayment, getAllPayment, getOnePayment } from "../controllers/paymentControllers";
 import { postOneProduct, getAllProduct } from "../controllers/adminControllers";
@@ -20,7 +20,11 @@ const routes = (app) => {
     .post(loginRequired, createPayment)
     .get(loginRequired, getAllPayment);
 
-  app.route("/payment/detail/:idPayment").get(loginRequired, getOnePayment);
+  app.route("/payment/detail/:idPayment")
+    .get(loginRequired, getOnePayment);
+
+  app.route("/verification")
+    .post(verification)
 };
 
 export default routes;
