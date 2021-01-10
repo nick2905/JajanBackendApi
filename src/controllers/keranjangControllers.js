@@ -11,6 +11,7 @@ export const getAllCart = async (req, res, next) => {
     res
       .send({
         message: err.message,
+        data: [],
       })
       .status(400);
   }
