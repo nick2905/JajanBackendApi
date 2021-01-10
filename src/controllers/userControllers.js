@@ -43,7 +43,10 @@ export const register = (req, res) => {
             user.hashPassword = undefined;
             return res
               .status(200)
-              .json({ message: 'Account successfull created' });
+              .json({
+                message: 'Account successfull created',
+                userId: newUser._id,
+              });
           }
         });
       }

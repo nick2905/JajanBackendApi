@@ -8,7 +8,7 @@ import cors from 'cors';
 const app = express();
 app.use(cors());
 
-const PORT = 3000 || process.env.PORT;
+const PORT = 4001 || process.env.PORT;
 
 // mongoose connection
 mongoose.Promise = global.Promise;
