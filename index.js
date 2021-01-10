@@ -58,6 +58,6 @@ app.get('/', (req, res) => {
   res.send(`Welcome to Express`);
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(PORT, () => {
   console.log(`Your server is running on port ${PORT}`);
 });
