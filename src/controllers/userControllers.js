@@ -84,3 +84,22 @@ export const login = (req, res) => {
   );
 };
 
+export const verification = async (req, res) => {
+  try {
+    const findBuyerAccount = await User.findOne({
+      _id: req.body.idUser
+    });
+    if (findBuyerAccount.isPhoneVerify === false) {
+      await User.updateOne({ _id: req.body.idUser }, {
+        $set: { "isPhoneVerify": true }
+      });
+      return res.status(200).json({ message: 'Successfull Verify' });
+    }
+    else {
+      return res.status(200).json({ message: 'Account have been reviewed before' });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json(error);
+  }
+}
