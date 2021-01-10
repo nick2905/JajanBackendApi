@@ -1,29 +1,29 @@
-import { User } from "../models/userModel";
-import jwt from "jsonwebtoken";
-const crypto = require("crypto");
+import { User } from '../models/userModel';
+import jwt from 'jsonwebtoken';
+const crypto = require('crypto');
 
 export const loginRequired = (req, res, next) => {
   if (req.user) {
     next();
   } else {
-    return res.status(401).json({ message: "Unauthorization User" });
+    return res.status(401).json({ message: 'Unauthorization User' });
   }
 };
 
 export const register = (req, res) => {
   const newUser = new User(req.body);
 
-  var salt = crypto.randomBytes(16).toString("hex");
-  console.log("salt -> " + salt);
-  console.log("Password -> " + req.body.hashPassword);
+  var salt = crypto.randomBytes(16).toString('hex');
+  console.log('salt -> ' + salt);
+  console.log('Password -> ' + req.body.hashPassword);
 
   var hash = crypto
-    .createHmac("sha256", salt)
+    .createHmac('sha256', salt)
     .update(req.body.hashPassword)
-    .digest("hex");
+    .digest('hex');
 
-  console.log("hash ->" + hash);
-  newUser.hashPassword = salt + "$" + hash;
+  console.log('hash ->' + hash);
+  newUser.hashPassword = salt + '$' + hash;
   //newUser.hashPassword = bcrypt.hashSync(req.body.hashPassword, 10);
   User.findOne(
     {
@@ -43,7 +43,7 @@ export const register = (req, res) => {
             user.hashPassword = undefined;
             return res
               .status(200)
-              .json({ message: "Account successfull created" });
+              .json({ message: 'Account successfull created' });
           }
         });
       }
@@ -61,22 +61,29 @@ export const login = (req, res) => {
       if (!user) {
         return res
           .status(401)
-          .json({ message: "Authentication failed. No user found!" });
+          .json({ message: 'Authentication failed. No user found!' });
       } else if (user) {
-        var passwordField = user.hashPassword.split("$");
+        var passwordField = user.hashPassword.split('$');
         var salt = passwordField[0];
         var hash = crypto
-          .createHmac("sha256", salt)
+          .createHmac('sha256', salt)
           .update(req.body.hashPassword)
-          .digest("hex");
+          .digest('hex');
         if (!(hash === passwordField[1])) {
           return res
             .status(401)
-            .json({ message: "Authentication failed. Wrong password!" });
+            .json({ message: 'Authentication failed. Wrong password!' });
         } else {
           //jwt
           return res.status(200).json({
-            token: jwt.sign({ email: user.email, _id: user.id }, "RESTFULLAPI"),
+            token: jwt.sign(
+              {
+                email: user.email,
+                _id: user.id,
+                isPhoneVerify: user.isPhoneVerify,
+              },
+              'RESTFULLAPI'
+            ),
           });
         }
       }
@@ -87,19 +94,23 @@ export const login = (req, res) => {
 export const verification = async (req, res) => {
   try {
     const findBuyerAccount = await User.findOne({
-      _id: req.body.idUser
+      _id: req.body.idUser,
     });
     if (findBuyerAccount.isPhoneVerify === false) {
-      await User.updateOne({ _id: req.body.idUser }, {
-        $set: { "isPhoneVerify": true }
-      });
+      await User.updateOne(
+        { _id: req.body.idUser },
+        {
+          $set: { isPhoneVerify: true },
+        }
+      );
       return res.status(200).json({ message: 'Successfull Verify' });
-    }
-    else {
-      return res.status(200).json({ message: 'Account have been reviewed before' });
+    } else {
+      return res
+        .status(200)
+        .json({ message: 'Account have been reviewed before' });
     }
   } catch (error) {
     console.log(error);
     return res.status(401).json(error);
   }
-}
+};
