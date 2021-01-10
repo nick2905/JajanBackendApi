@@ -83,6 +83,7 @@ export const login = (req, res) => {
                 _id: user.id,
                 isPhoneVerify: user.isPhoneVerify,
                 noTelp: user.noTelp,
+                role: user.role,
               },
               'RESTFULLAPI'
             ),
