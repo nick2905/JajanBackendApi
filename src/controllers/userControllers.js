@@ -41,12 +41,10 @@ export const register = (req, res) => {
             return res.status(400).send({ message: err });
           } else {
             user.hashPassword = undefined;
-            return res
-              .status(200)
-              .json({
-                message: 'Account successfull created',
-                userId: newUser._id,
-              });
+            return res.status(200).json({
+              message: 'Account successfull created',
+              userId: newUser._id,
+            });
           }
         });
       }
@@ -84,6 +82,7 @@ export const login = (req, res) => {
                 email: user.email,
                 _id: user.id,
                 isPhoneVerify: user.isPhoneVerify,
+                noTelp: user.noTelp,
               },
               'RESTFULLAPI'
             ),
